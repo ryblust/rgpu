@@ -1,2 +1,2 @@
-# Rage
+# rgpu
 Modern Graphics API Abstraction
