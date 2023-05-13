@@ -1,10 +1,14 @@
 add_rules("mode.debug", "mode.release")
 
-target("Rage")
+target("rgpu")
     set_languages("c++20")
     set_warnings("allextra")
-    set_optimize("none")
+    set_optimize("aggressive")
+    set_exceptions("no-cxx")
 
-    add_includedirs("inc")
-    add_files("src/d3d12/*.cpp")
-    add_files("Main.cpp")
+    add_includedirs("include")
+
+    add_files("source/d3d12/*.cpp")
+    add_links("dxgi", "d3d12", "d3dcompiler")
+
+    add_files("examples/HelloTriangle.cpp")
