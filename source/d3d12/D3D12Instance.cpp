@@ -1,4 +1,4 @@
-#include <rgpu/common/Instance.hpp>
+#include <rgpu/d3d12/D3D12Instance.hpp>
 
 namespace rgpu {
 
@@ -24,10 +24,7 @@ GPUInstance::GPUInstance(GPUInstanceDescriptor descriptor) noexcept
 
 GPUAdapter GPUInstance::CreateAdapter() const noexcept
 {
-    Microsoft::WRL::ComPtr<IDXGIAdapter1> adapter;
-    Factory->EnumAdapterByGpuPreference(0, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(adapter.ReleaseAndGetAddressOf()));
-
-    return {Factory.Get(), adapter.Get()};
+    return Factory.Get();
 }
 
 } // namespace rgpu

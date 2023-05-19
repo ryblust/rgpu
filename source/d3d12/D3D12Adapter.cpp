@@ -1,6 +1,11 @@
-#include <rgpu/common/Adapter.hpp>
+#include <rgpu/d3d12/D3D12Adapter.hpp>
 
 namespace rgpu {
+
+GPUAdapter::GPUAdapter(IDXGIFactory6* factory) noexcept
+{
+    factory->EnumAdapterByGpuPreference(0, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(Adapter.ReleaseAndGetAddressOf()));
+}
 
 GPUDevice GPUAdapter::CreateDevice() const noexcept
 {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <rgpu/common/Buffer.hpp>
-#include <rgpu/d3d12/D3D12Texture.hpp>
 
 namespace rgpu {
 
@@ -29,22 +28,13 @@ enum class GPUTextureUsage : std::uint8_t {
 
 struct GPUPixelFormat final {
     static constexpr std::uint8_t RGBA8UNORM = 0;
-
     constexpr GPUPixelFormat(std::uint8_t format) noexcept : Format{format} {}
-    constexpr operator std::uint8_t() const noexcept { return Format; }
-
     std::uint8_t Format;
 };
 
-struct GPUTextureDimension final {
-    static constexpr std::uint8_t Texture2D = 0;
-    static constexpr std::uint8_t Texture3D = 1;
-
-    constexpr GPUTextureDimension(std::uint8_t dimension) noexcept : Dimension{dimension} {}
-    constexpr operator std::uint8_t() const noexcept { return Dimension; }
-
-    std::uint8_t Dimension;
-};
+using TextureDimension = std::uint8_t;
+inline constexpr std::uint8_t Texture2D = 0;
+inline constexpr std::uint8_t Texture3D = 1;
 
 struct GPUTextureDescriptor final {
     std::uint32_t Width;
@@ -55,27 +45,33 @@ struct GPUTextureDescriptor final {
     GPUTextureState State;
     GPUTextureUsage Usage;
     GPUPixelFormat PixelFormat;
-    GPUTextureDimension Dimension;
-    GPUStorageMode StorageMode;
+    TextureDimension Dimension;
+    GPUMemoryUsage MemoryUsage;
 };
 
 struct GPUTextureViewType final {
+    static constexpr std::uint8_t DepthStencil    = 0;
+    static constexpr std::uint8_t RenderTarget    = 1;
+    static constexpr std::uint8_t ShaderResource  = 1;
+    static constexpr std::uint8_t UnorderedAccess = 2;
+    constexpr GPUTextureViewType(std::uint8_t type) noexcept : Type(type) {}
+    std::uint8_t Type;
 };
 
-struct GPUTextureViewDescriptor final {
+inline constexpr std::uint8_t DepthStencilView    = 0;
+inline constexpr std::uint8_t RenderTargetView    = 1;
+// inline constexpr std::uint8_t ShaderResourceView  = 1;
+// inline constexpr std::uint8_t UnorderedAccessView = 2;
+
+struct GPUTextureViewDescriptor final
+{
     std::uint32_t MipCount;
     std::uint32_t BaseMipLevel;
     std::uint32_t BaseArrayLayer;
     std::uint32_t ArrayLayerCount;
     GPUPixelFormat Format;
     GPUTextureViewType ViewType;
-    GPUTextureDimension Dimension;
-};
-
-struct GPUTextureView : internal::GPUTextureViewImpl {};
-
-struct GPUTexture : internal::GPUTextureImpl {
-    GPUTextureView CreateTextureView() const noexcept;
+    TextureDimension Dimension;
 };
 
 } // namespace rgpu

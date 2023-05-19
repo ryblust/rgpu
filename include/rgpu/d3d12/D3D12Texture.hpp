@@ -1,13 +1,27 @@
 #pragma once
 
-#include <rgpu/d3d12/d3d12.hpp>
+#include <rgpu/common/Texture.hpp>
 
-namespace rgpu::internal {
+#include <d3d12.h>
+#include <wrl/client.h>
 
-struct GPUTextureViewImpl {};
+namespace rgpu {
 
-struct GPUTextureImpl {
+class GPUTextureView final {
+    friend class GPUTexture;
+    GPUTextureView(GPUTextureViewDescriptor descriptor, ID3D12Device5* device) noexcept;
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> TextureDescHeap;
+};
+
+class GPUTexture final {
+public:
+    GPUTextureView CreateTextureView(GPUTextureViewDescriptor descriptor) const noexcept;
+private:
+    friend class GPUDevice;
+    friend class GPUSwapChain;
+    GPUTexture(GPUTextureDescriptor descriptor, ID3D12Device5* device) noexcept;
+private:
     Microsoft::WRL::ComPtr<ID3D12Resource> Texture;
 };
 
-} // namespace rgpu::internal
+} // namespace rgpu

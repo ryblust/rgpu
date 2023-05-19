@@ -1,11 +1,12 @@
 #pragma once
 
-#include <rgpu/d3d12/d3d12.hpp>
+#include <d3d12.h>
+#include <wrl/client.h>
 
-namespace rgpu::internal {
+namespace rgpu {
 
-struct GPUCommandBufferImpl {
+class GPUCommandBuffer final {
     Microsoft::WRL::ComPtr<ID3D12CommandList> CommandList;
 };
 
-} // namespace rgpu::internal
+} // namespace rgpu

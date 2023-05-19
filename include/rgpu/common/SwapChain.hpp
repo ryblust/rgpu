@@ -1,38 +1,22 @@
 #pragma once
 
-#include <rgpu/common/Queue.hpp>
-#include <rgpu/common/Texture.hpp>
-#include <rgpu/d3d12/D3D12SwapChain.hpp>
+#include <cstdint>
 
 namespace rgpu {
 
-enum class GPUPresentMode : std::uint16_t {
-    Immediately, VSync
-};
+using SwapChainFormat = std::uint16_t;
+inline constexpr std::uint16_t SwapChainFormatRGBA8UNorm   = 0;
+inline constexpr std::uint16_t SwapChainFormatRGB10A2UNorm = 1;
 
-struct GPUSwapChainFormat final {
-    static constexpr std::uint16_t RGBA8UNorm   = 0;
-    static constexpr std::uint16_t RGB10A2UNorm = 1;
-
-    GPUSwapChainFormat(std::uint16_t format) noexcept : Format(format) {}
-    constexpr operator std::uint16_t() const noexcept { return Format; }
-
-    std::uint16_t Format;
-};
+class GPUCommandQueue;
 
 struct GPUSwapChainDescriptor final {
     std::uint32_t Width;
     std::uint32_t Height;
+    SwapChainFormat Format;
     std::uint32_t BackBufferCount;
-    GPUPresentMode PresentMode;
-    GPUSwapChainFormat Format;
+    GPUCommandQueue& PresentQueue;
     void* Surface;
-    GPUQueue& PresentQueue;
-};
-
-struct GPUSwapChain final : internal::GPUSwapChainImpl {
-    std::uint32_t GetCurrentFrameIndex() const noexcept;
-    GPUTexture& FetchRenderTarget() const noexcept;
 };
 
 } // namespace rgpu
