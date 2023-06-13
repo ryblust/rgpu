@@ -1,4 +1,4 @@
-#include "SDLWindow.hpp"
+#include <sdl/sdlwindow.hpp>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
@@ -6,10 +6,7 @@
 SDLWindow::SDLWindow(const char* title, std::uint32_t width, std::uint32_t height) noexcept
 {
     SDL_Init(SDL_INIT_EVERYTHING);
-    SDLWindowHandle = SDL_CreateWindow(title,
-        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        static_cast<int>(width), static_cast<int>(height),
-        SDL_WINDOW_ALLOW_HIGHDPI);
+    SDLWindowHandle = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, static_cast<int>(width), static_cast<int>(height), SDL_WINDOW_ALLOW_HIGHDPI);
 
     SDL_SysWMinfo windowinfo;
     SDL_GetWindowWMInfo(static_cast<SDL_Window*>(SDLWindowHandle), &windowinfo);
@@ -28,9 +25,11 @@ SDLWindow::~SDLWindow() noexcept
 
 bool SDLWindow::PollEvents() const noexcept
 {
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-        if (event.type == SDL_QUIT)
-            return false;
+    static SDL_Event event;
+    SDL_PollEvent(&event);
+
+    if (event.type == SDL_QUIT)
+        return false;
+
     return true;
 }

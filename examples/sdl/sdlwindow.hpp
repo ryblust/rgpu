@@ -9,5 +9,5 @@ public:
     bool PollEvents() const noexcept;
     void* NativeWindowHandle;
 private:
-    void* SDLWindowHandle; // SDL_Window*
+    void* SDLWindowHandle; // declare void* to avoid including SDL headers
 };

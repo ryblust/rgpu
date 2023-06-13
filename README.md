@@ -1,7 +1,2 @@
 # rgpu
-rgpu is a abstraction layer of modern graphics API
-
-## Feature
-- Zero overhead
-- WebGPU Like
-- C++20
+rgpu is a WebGPU like abstraction layer of modern graphics API

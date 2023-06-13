@@ -1,21 +1,28 @@
+add_rules("mode.debug", "mode.release", "plugin.compile_commands.autoupdate", {outputdir = ".vscode"})
+set_policy("build.optimization.lto", true)
+
 add_requires("libsdl")
 
-target("rgpuHelloTriangle")
-    on_load(function()
-        if not is_plat("windows") then
-            cprint('${red}Other platform is working in progress')
-        end
-    end)
+set_languages("c++20")
+set_warnings("allextra")
+set_exceptions("no-cxx")
 
-    add_packages("libsdl")
+add_cxxflags("/GS-", "/GR-", {tools = {"cl", "clang_cl"}})
+add_cxxflags("/fno-rtti", {tools = {"clang", "gcc"}})
 
-    set_languages("c++20")
-    set_warnings("allextra")
-    set_optimize("none")
-    set_exceptions("no-cxx")
-
+target("rgpu")
+    set_kind("static")
     add_includedirs("include")
-    add_files("source/d3d12/*.cpp")
-    add_syslinks("dxgi", "d3d12", "d3dcompiler")
+    add_files("source/rgpu_d3d12.cpp")
+    add_syslinks("dxgi", "d3d12")
 
+target("sdlwindow")
+    set_kind("static")
+    add_packages("libsdl")
+    add_includedirs("examples")
+    add_files("examples/sdl/sdlwindow.cpp")
+
+target("HelloTriangle")
+    add_deps("rgpu", "sdlwindow")
+    add_includedirs("include", "examples")
     add_files("examples/HelloTriangle.cpp")
